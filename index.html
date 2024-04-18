@@ -7,7 +7,7 @@
   <meta name="description" content="" />
 
   <!-- calls for the arcgis api's CSS file and JS library. -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/dark/main.css">
   <script src="https://js.arcgis.com/4.25/"></script>
 
   <!-- Adding the modules, API key, and map constant needed for a full screen map app -->
@@ -36,7 +36,7 @@
 
       esriConfig.apiKey = "AAPK563eb1712e9d41edbd3f529286c8f948VRUNmpGsQs8vbooD1VMSvLo25vGAVTkzewpqswbQlLwqrjFKFyF2XNPVPR7oD_8m";
       const map = new Map({
-        basemap: "arcgis-topographic" // Basemap layer
+        basemap: "arcgis-imagery" // Basemap layer
       });
 
       const view = new MapView({
