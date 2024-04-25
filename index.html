@@ -53,22 +53,11 @@
           container: "viewDiv" // Div element
         });
 
-        // Create a GraphicsLayer
-        const graphicsLayer = new GraphicsLayer();  // Create a new graphics layer
-        map.add(graphicsLayer); // Add it to the map
-        
         const locateBtn = new Locate({
           view: view
         });  
 
-        // Create featurelayer from feature service 
-        const layer = new FeatureLayer({ 
-        // URL to the service 
-            url: "https://survey123.arcgis.com/share/5d356f78a99d427d9e5ba1d8b0f848bb" //Your item URL Goes Here
-        });
-
-         //adding layer to the map
-         map.add(layer);
+        
         
         // Add the locate widget to the top left corner of the view
         view.ui.add(locateBtn, {
@@ -116,10 +105,35 @@
 
 
 
+
+
         //////////////////////////////////////////////////////////////////
         //////////////////////////////////////Read/Write////////////////
         //////////////////////////////////////////////////////////////////
 
+      // Define a pop-up for usaeduLayer
+        const popuppop = {
+        "title": "EDUs",
+        "content": "<b>Guess how many people live on this block.	:</b> {Guess how many people live on this block.	}<br>    <b>Guess how many dwellings are on this block.	:</b> {Guess how many dwellings are on this block.	}<br>   <b>Address:</b> {ADDR}<br>   <b>City:</b> {CITY}<br>   <b>Locale:</b> {LOCALE}<br>  <b>Level of Institution:</b> {ICLEVEL}<br>  <b>Website:</b> {WEBADDR}<br> <b>Phone Number:</b> {GENTELE}<br> "
+      }
+
+
+        // Create featurelayer from feature service 
+        const layer = new FeatureLayer({ 
+        // URL to the service 
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_5d356f78a99d427d9e5ba1d8b0f848bb_results/FeatureServer", //Your item URL Goes Here
+       
+        //adding the popup here
+        outFields: ["Guess how many people live on this block.	","Guess how many dwellings are on this block.	","ADDR","CITY", "LOCALE", "ICLEVEL", "WEBADDR", "GENTELE"],
+        popupTemplate: popuppop   
+        });
+
+         //adding layer to the map
+         map.add(layer);
+
+
+
+         
         const myAirportsRenderer = {
           "type": "simple",
           "symbol": {
@@ -207,7 +221,7 @@
 </head>
 <body>
   <!--adding the button to add a record -->
-  <a href="https://arcg.is/OfeTT1"target="_blank" class="addRecordBtn">Add Record</a>
+  <a href="https://arcg.is/LDTK0"target="_blank" class="addRecordBtn">Add Record</a>
 
   <!-- the div to displays the map  -->
   <div id="viewDiv"></div>
