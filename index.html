@@ -38,14 +38,16 @@
     //adding the search widget
     "esri/widgets/Search",
 
-
+    //adding the modules for the editor widget
     ], function(esriConfig,Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor, Legend, Locate, Search) {
 
+      //setting the API key
       esriConfig.apiKey = "AAPK563eb1712e9d41edbd3f529286c8f948VRUNmpGsQs8vbooD1VMSvLo25vGAVTkzewpqswbQlLwqrjFKFyF2XNPVPR7oD_8m";
       const map = new Map({
-        basemap: "arcgis-imagery" // Basemap layer
+        basemap: "arcgis-topographic" // Basemap layer
       });
 
+      // Create a MapView instance (for 2D viewing) and reference the map instance
       const view = new MapView({
           map: map,
           center: [-97.7431, 30.2672], // Longitude, latitude
@@ -53,6 +55,7 @@
           container: "viewDiv" // Div element
         });
 
+        // Create a Locate widget instance and set properties
         const locateBtn = new Locate({
           view: view
         });  
@@ -74,32 +77,31 @@
           position: "bottom-right"
         });
 
-
-    
-
     ///////////////////////////////////////////////////////////////////////////////////////////
-    /////////////FeatureLayer//////////////////////////////////////////////////////////////////
+    /////////////BlockLayer//////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    // Define a pop-up for usaeduLayer
-      const popupEduusa = {
-        "title": "EDUs",
-        "content": "<b>Name:</b> {POP100}<br>    <b>Total Enrollment:</b> {INSTSIZE}<br>   <b>Address:</b> {ADDR}<br>   <b>City:</b> {CITY}<br>   <b>Locale:</b> {LOCALE}<br>  <b>Level of Institution:</b> {ICLEVEL}<br>  <b>Website:</b> {WEBADDR}<br> <b>Phone Number:</b> {GENTELE}<br> "
+    // Define a pop-up for usapopLayer
+      const popuppopusa = {
+        "title": "Block Counts",
+        "content": "<b>Block Population:</b> {POP100}<br>    <b>Block Dwelling Units:</b> {HU100}<br>"
       }
 
       //adding the Const for the feature layer
-      const usaeduLayer = new FeatureLayer({
+      const usapopLayer = new FeatureLayer({
       url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/US_Census_Blocks_v1/FeatureServer",
 
-      //adding the popup here
-      outFields: ["POP100","INSTSIZE","ADDR","CITY", "LOCALE", "ICLEVEL", "WEBADDR", "GENTELE"],
-      popupTemplate: popupEduusa
-      
-      });
-      usaeduLayer.opacity = 0.5;
-      usaeduLayer.effect = "brightness(5) hue-rotate(270deg) contrast(200%)";
+      //adding the popup for each census block
+      outFields: ["POP100","HU100"],
+      popupTemplate: popuppopusa
+       });
+
+      //playing around with some settings to make the map easier to read
+      usapopLayer.opacity = 0.3;
+      usapopLayer.effect = "brightness(1) hue-rotate(90deg) contrast(200%)";
+
       //adding the feature layer to the map
-      map.add(usaeduLayer);
+      map.add(usapopLayer);
 
 
 
@@ -111,10 +113,10 @@
         //////////////////////////////////////Read/Write////////////////
         //////////////////////////////////////////////////////////////////
 
-      // Define a pop-up for usaeduLayer
+      // Define a pop-up for usapopLayer
         const popuppop = {
-        "title": "EDUs",
-        "content": "<b>Guess how many people live on this block.	:</b> {Guess how many people live on this block.	}<br>    <b>Guess how many dwellings are on this block.	:</b> {Guess how many dwellings are on this block.	}<br>   <b>Address:</b> {ADDR}<br>   <b>City:</b> {CITY}<br>   <b>Locale:</b> {LOCALE}<br>  <b>Level of Institution:</b> {ICLEVEL}<br>  <b>Website:</b> {WEBADDR}<br> <b>Phone Number:</b> {GENTELE}<br> "
+        "title": "Guesses on Block",
+        "content": "<b>Block Population Guess:</b> {guess_how_many_people_live_on_t}<br>    <b>Block Dwelling Guess:</b> {guess_how_many_dwellings_are_on}<br>"
       }
 
 
@@ -124,84 +126,24 @@
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_5d356f78a99d427d9e5ba1d8b0f848bb_results/FeatureServer", //Your item URL Goes Here
        
         //adding the popup here
-        outFields: ["Guess how many people live on this block.	","Guess how many dwellings are on this block.	","ADDR","CITY", "LOCALE", "ICLEVEL", "WEBADDR", "GENTELE"],
+        outFields: ["guess_how_many_people_live_on_t","guess_how_many_dwellings_are_on"],
         popupTemplate: popuppop   
         });
 
          //adding layer to the map
          map.add(layer);
-
-
-
-         
-        const myAirportsRenderer = {
-          "type": "simple",
-          "symbol": {
-            "type": "picture-marker",
-            "url": "Custom-Icon-Design-Flatastic-1-Search.512.png", 
-            "width": "18px",
-            "height": "18px"
-          }
-        }
-
-        const myAirportsLabels = {
-      symbol: {
-        type: "text",
-        color: "#FFFFFF",
-        haloColor: "#5E8D74",
-        haloSize: "2px",
-        font: {
-          size: "12px",
-          family: "Noto Sans",
-          style: "italic",
-          weight: "normal"
-        }
-      },
-      labelPlacement: "above-center",
-      labelExpressionInfo: {
-        expression: "$feature.AirportCode"
-      }
-    };
-
-      
-        //adding the const for the feature layer
-        const myAirports = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/mruffing_myairports/FeatureServer",
-        renderer: myAirportsRenderer, // calling the icon
-        labelingInfo: [myAirportsLabels],
-        //adding the popup here
-        outFields: ["AirportCode"],
-
-        });
-
-        //adding the feature layer to the map
-        map.add(myAirports);
-
-        // Set the point layer's LayerInfo
-        const pointInfos = {
-        layer: myAirports
-        }
-
-        // Begin Editor constructor
-        const editor = new Editor({
-        view: view,
-        layerInfos: [pointInfos]
-        }); // End Editor constructor
-
-        // Add the widget to the view
-        view.ui.add(editor, "bottom-left");
-
+       
         // Create a new Legend instance
         const legend = new Legend({
           view: view,
           layerInfos: [{
-            layer: myAirports,
-            title: "User Added Airports"
+            layer: layer,
+            title: "User Added Locations"
           }]
         });
 
         // Add the legend to the view's UI
-        view.ui.add(legend, "bottom-right");
+        view.ui.add(legend, "bottom-left");
 
     });
   </script>
@@ -216,9 +158,33 @@
       height: 100%;
       width: 100%;
     }
+
+    /* adding stylizing details for the button :) */
+        .addRecordBtn {
+            position: absolute;
+            z-index: 10;
+            top: 10px;
+            right: 10px;
+            background-color: #0079c1;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .addRecordBtn:hover {
+         background-color: #005a87;
+        }
+   </style>
+
+
   </style>
 
 </head>
+
 <body>
   <!--adding the button to add a record -->
   <a href="https://arcg.is/LDTK0"target="_blank" class="addRecordBtn">Add Record</a>
