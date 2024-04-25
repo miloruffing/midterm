@@ -7,8 +7,8 @@
   <meta name="description" content="" />
 
   <!-- calls for the arcgis api's CSS file and JS library. -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/dark/main.css">
-  <script src="https://js.arcgis.com/4.25/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
 
   <!-- Adding the modules, API key, and map constant needed for a full screen map app -->
   <script>
@@ -64,7 +64,7 @@
         // Create featurelayer from feature service 
         const layer = new FeatureLayer({ 
         // URL to the service 
-            url: "https://arcg.is/LDTK0" //Your item URL Goes Here
+            url: "https://survey123.arcgis.com/share/5d356f78a99d427d9e5ba1d8b0f848bb" //Your item URL Goes Here
         });
 
          //adding layer to the map
@@ -206,7 +206,7 @@
 
 </head>
 <body>
-  
+  <!--adding the button to add a record -->
   <a href="https://arcg.is/OfeTT1"target="_blank" class="addRecordBtn">Add Record</a>
 
   <!-- the div to displays the map  -->
