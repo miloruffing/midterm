@@ -64,8 +64,11 @@
         // Create featurelayer from feature service 
         const layer = new FeatureLayer({ 
         // URL to the service 
-            url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_32b3c6d6a95a41908f77c6e1f9c6bd70_results/FeatureServer/0" //Your item URL Goes Here
+            url: "https://arcg.is/LDTK0" //Your item URL Goes Here
         });
+
+         //adding layer to the map
+         map.add(layer);
         
         // Add the locate widget to the top left corner of the view
         view.ui.add(locateBtn, {
@@ -203,6 +206,8 @@
 
 </head>
 <body>
+  
+  <a href="https://arcg.is/OfeTT1"target="_blank" class="addRecordBtn">Add Record</a>
 
   <!-- the div to displays the map  -->
   <div id="viewDiv"></div>
