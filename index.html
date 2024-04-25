@@ -32,7 +32,14 @@
     //adding the legend widget
     "esri/widgets/Legend",
 
-    ], function(esriConfig,Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor, Legend) {
+    //adding the location widget
+    "esri/widgets/Locate",
+
+    //adding the search widget
+    "esri/widgets/Search",
+
+
+    ], function(esriConfig,Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor, Legend, Locate, Search) {
 
       esriConfig.apiKey = "AAPK563eb1712e9d41edbd3f529286c8f948VRUNmpGsQs8vbooD1VMSvLo25vGAVTkzewpqswbQlLwqrjFKFyF2XNPVPR7oD_8m";
       const map = new Map({
@@ -49,144 +56,33 @@
         // Create a GraphicsLayer
         const graphicsLayer = new GraphicsLayer();  // Create a new graphics layer
         map.add(graphicsLayer); // Add it to the map
-
-////////////////////////////////////////////////////////////////////////////////////////////
-///////////////POLYLINE/////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-
-        // Define the polyline's geometry
-          const polyline = {
-            type: "polyline",
-            paths: [
-              [-97.59, 30.89], // Point A
-              [-97.620396,  30.833373], //Point B
-              [-97.67, 30.83]  // Point C
-              // Add more points as needed
-            ]
-          };
-
-          // Define the polyline's symbol
-          const simpleLineSymbol = {
-            type: "simple-line",
-            color: [226, 119, 40], // Orange
-            width: 2
-          };
-
-          // Define the popup properties
-          const polylinepopupTemplate = {
-            title: "{Name}",
-            content: "{Description}"
-          };
-
-          const polylineattributes = {
-            Name: "Jarrel, TX EF5 Tornado Path",
-            Description: "This extremely violent tornado from 1997 traveled extremely slowly, and in the opposite direction of typical tornadoes."
-          };
-
-          // Create a new Graphic object with the polyline's geometry and symbol
-          const polylineGraphic = new Graphic({
-            geometry: polyline,
-            symbol: simpleLineSymbol,
-            attributes: polylineattributes,
-            popupTemplate: polylinepopupTemplate
-          });
-
-          // Add the new Graphic object to the graphics layer
-          graphicsLayer.add(polylineGraphic);
-
-////////////////////////////////////////////////////////////////////////////////////////////
-///////////////POINT////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-
-        // defining the geometry of the point
-        const point = { //Create a point  
-          type: "point",  
-          longitude: -97.750689,    //long lat of Stevie Ray Vaughan Statue
-          latitude: 30.263098
-        };
-
-        // defining the maker style
-        const simpleMarkerSymbol = {  
-        type: "simple-marker", 
-        style: "square", 
-        color: [0, 0, 139],  // Color of blues rock
-        outline: {  
-          color: [255, 255, 255], // White  
-          width: 1
-        }  
-      };
-
-      //defining popup properties
-      const popupTemplate = {
-        title: "{Name}",
-        content: "{Description}"
-      }
-      const attributes = {
-        Name: "Stevie Ray Vaughan Statue",
-        Description: "A bronze sculpture of Stevie Ray Vaughan by Ralph Helmick"
-      }
-
-      //creating the point
-      const pointGraphic = new Graphic({  
-        geometry: point,  
-        symbol: simpleMarkerSymbol,
         
-        // adding popup properties
-        attributes: attributes,
-        popupTemplate: popupTemplate
+        const locateBtn = new Locate({
+          view: view
+        });  
 
-      });
+        // Create featurelayer from feature service 
+        const layer = new FeatureLayer({ 
+        // URL to the service 
+            url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_32b3c6d6a95a41908f77c6e1f9c6bd70_results/FeatureServer/0" //Your item URL Goes Here
+        });
+        
+        // Add the locate widget to the top left corner of the view
+        view.ui.add(locateBtn, {
+          position: "top-left"
+        }); 
+        
+        // Create the search widget and add it to the top right corner of the view
+        const searchWidget = new Search({
+          view: view
+        });
 
-      // adding the point to the graphics layer
-      graphicsLayer.add(pointGraphic);
+        // Add the search widget to the top right corner of the view
+        view.ui.add(searchWidget, {
+          position: "bottom-right"
+        });
 
-      /////////////////////////////////////////////////////////////////////////////
-      /////////////////////////POLYGON/////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////
 
-      // Define the polygon's geometry
-      const polygon = {
-        type: "polygon",
-        rings: [
-          [-97.620769, 30.837577], // Point A
-          [-97.619170, 30.833741], // Point B
-          [-97.621603, 30.832959], // Point C
-          [-97.623273, 30.836785]  // Point D 
-          // Add more points as needed
-        ]
-      };
-
-      // Define the polygon's symbol
-      const simpleFillSymbol = {
-        type: "simple-fill",
-        color: [227, 139, 79, 0.8], // Orange, semi-transparent
-        outline: {
-          color: [255, 255, 255], // White
-          width: 1
-        }
-      };
-
-      // Define the popup properties
-      const polygonPopupTemplate = {
-        title: "{Name}",
-        content: "{Description}"
-      };
-
-      const polygonAttributes = {
-        Name: "Double Creek Estates",
-        Description: "This is where the tornado did its worst damage."
-      };
-
-      // Create a new Graphic object with the polygon's geometry and symbol
-      const polygonGraphic = new Graphic({
-        geometry: polygon,
-        symbol: simpleFillSymbol,
-        attributes: polygonAttributes,
-        popupTemplate: polygonPopupTemplate
-      });
-
-      // Add the new Graphic object to the graphics layer
-      graphicsLayer.add(polygonGraphic);
     
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -214,93 +110,7 @@
       map.add(usaeduLayer);
 
 
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////Airports////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
 
-    //setting up the icon
-    const airportRenderer = {
-        "type": "simple",
-        "symbol": {
-          "type": "picture-marker",
-          "url": "happy_airplane.png",
-          "width": "18px",
-          "height": "18px"
-        }
-      }
-
-    //const to make the airport labels
-    const airportLabels = {
-      symbol: {
-        type: "text",
-        color: "#FFFFFF",
-        haloColor: "#5E8D74",
-        haloSize: "2px",
-        font: {
-          size: "12px",
-          family: "Noto Sans",
-          style: "italic",
-          weight: "normal"
-        }
-      },
-      labelPlacement: "above-center",
-      labelExpressionInfo: {
-        expression: "$feature.Fac_Name"
-      }
-    };
-
-      const airportlayer = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/miloruffing_usairports/FeatureServer", //get URL from AGOL Item Page
-        renderer: airportRenderer, // calling the icon
-        definitionExpression: "Fac_Type = 'AIRPORT'", //adding sql to filter for airports
-        labelingInfo: [airportLabels] //adding the labels
-      });
-
-        //adding the feature layer to the map
-        map.add(airportlayer);
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        /////////////Heliports//////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        const heliportRenderer = {
-          "type": "simple",
-          "symbol": {
-            "type": "picture-marker",
-            "url": "happy hospital.png", 
-            "width": "18px",
-            "height": "18px"
-          }
-}
-        const heliportLabels = {
-      symbol: {
-        type: "text",
-        color: "#FFFFFF",
-        haloColor: "#5E8D74",
-        haloSize: "2px",
-        font: {
-          size: "12px",
-          family: "Noto Sans",
-          style: "italic",
-          weight: "normal"
-        }
-      },
-      labelPlacement: "above-center",
-      labelExpressionInfo: {
-        expression: "$feature.Fac_Name"
-      }
-    };
-
-      const heliportlayer = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/miloruffing_usairports/FeatureServer", //get URL from AGOL Item Page
-        renderer: heliportRenderer, // calling the icon
-        definitionExpression: "Fac_Type = 'HELIPORT'", //adding sql to filter for airports
-        labelingInfo: [heliportLabels] //adding the labels
-      });
-
-        //adding the feature layer to the map
-        map.add(heliportlayer);
 
 
         //////////////////////////////////////////////////////////////////
@@ -362,7 +172,7 @@
         }); // End Editor constructor
 
         // Add the widget to the view
-        view.ui.add(editor, "top-right");
+        view.ui.add(editor, "bottom-left");
 
         // Create a new Legend instance
         const legend = new Legend({
